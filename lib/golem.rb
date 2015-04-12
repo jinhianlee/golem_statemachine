@@ -189,7 +189,9 @@ module Golem
                 results.all?{|result| result == true}
               end
 
-              if self.class.respond_to?(:transaction)
+              # Disable transactions in this custom branch
+              # if self.class.respond_to?(:transaction)
+              if false
                  # Wrap event call inside a transaction, if supported (i.e. for ActiveRecord)
                 self.class.transaction(&fire_proc)
               else
@@ -200,7 +202,8 @@ module Golem
 
           define_method("determine_#{"#{statemachine_name}_" if statemachine_name}state_after_#{event.name}") do |*args|
             transition = nil
-            if self.class.respond_to?(:transaction)
+            # if self.class.respond_to?(:transaction)
+            if false
               self.class.transaction do
                 # TODO: maybe better to use fire_event + transaction rollback to simulate event firing?
                 transition = statemachine.determine_transition_on_event(self, event, *args)
